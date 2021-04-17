@@ -11,7 +11,7 @@ So to use it you could install the phar version, or use this Docker image.
 
 Create a container from `steevanb/composer-require-checker` image and add a volume with your code into `/app` directory inside the container.
 ```bash
-docker run -it --rm -v $(pwd):/app:ro steevanb/composer-require-checker:2.1.0
+docker run --tty --rm --volume $(pwd):/app:ro steevanb/composer-require-checker:3.2.0
 ```
 
 ## Use it with CircleCI
@@ -41,7 +41,7 @@ jobs:
 
     composerRequireChecker:
         docker:
-            - image: steevanb/composer-require-checker:2.1.0
+            - image: steevanb/composer-require-checker:3.2.0
         working_directory: /app
         steps:
             - checkout

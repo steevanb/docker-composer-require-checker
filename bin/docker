@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -eu
+
+readonly projectDirectory=$(realpath $(dirname $(realpath $0))/..)
+source ${projectDirectory}/.env
+
+docker \
+    build \
+      $projectDirectory \
+      --file=${projectDirectory}/docker/Dockerfile \
+      --build-arg COMPOSER_REQUIRE_CHECKER_VERSION=${COMPOSER_REQUIRE_CHECKER_VERSION} \
+      --tag steevanb/composer-require-checker:${COMPOSER_REQUIRE_CHECKER_VERSION}
+
+push=false
+for param in "$@"; do
+    if [ "${param}" == "--push" ]; then
+        push=true
+    fi
+done
+
+if [ ${push} == true ]; then
+    docker logout
+    docker login --username=steevanb
+    docker push steevanb/composer-require-checker:${COMPOSER_REQUIRE_CHECKER_VERSION}
+fi
